@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'io.qameta.allure' version '2.11.2'
     id 'io.freefair.lombok' version '8.4'
+    id 'checkstyle'
 }
 
 group 'com.example'
@@ -64,7 +65,26 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+// Checkstyle task configuration
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
 // Task to generate Allure report
 //task generateAllureReport(type: Exec) {
 //    commandLine 'allure', 'generate', 'build/allure-results', '--clean'
 //}
+
+// Checkstyle configuration
+// The latest stable version is used
+checkstyle {
+    toolVersion = '10.12.5'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    maxWarnings = 0
+    ignoreFailures = false
+}
+
+
