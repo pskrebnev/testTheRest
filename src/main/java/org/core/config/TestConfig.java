@@ -15,7 +15,7 @@ public class TestConfig {
 
   // Default values as constants
   private static final String DEFAULT_BASE_URL = "https://jsonplaceholder.typicode.com";
-  private static final int DEFAULT_THREAD_COUNT = 3;
+  private static final int DEFAULT_THREAD_COUNT = 4;
 
   private static volatile TestConfig instance;
   private final ConfigProperties configProperties;
@@ -46,12 +46,12 @@ public class TestConfig {
     try (InputStream input = getClass().getClassLoader()
         .getResourceAsStream(PROPERTY_FILE_NAME)) {
       if (input == null) {
-        logger.warn("{} not found, using defaults", PROPERTY_FILE_NAME);
+        logger.warn("{}. {} not found, using defaults", ERR_MESSAGE, PROPERTY_FILE_NAME);
         return props;
       }
       props.load(input);
     } catch (IOException ex) {
-      logger.error("Error loading properties file", ex);
+      logger.error(ERR_MESSAGE, ex);
     }
     return props;
   }
