@@ -17,7 +17,7 @@ public class TestConfig {
   private static final String DEFAULT_BASE_URL = "https://jsonplaceholder.typicode.com";
   private static final int DEFAULT_THREAD_COUNT = 4;
 
-  private static TestConfig instance;
+  private static volatile TestConfig instance;
   private final ConfigProperties configProperties;
 
   private TestConfig() {
