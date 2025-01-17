@@ -10,23 +10,24 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 
 public class BaseTest {
-  private static final Logger logger = LoggerFactory.getLogger(RestClient.class);
-  private static String BASE_URL;
+  private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
   private static final String PROPERTY_FILE_NAME = "app.properties";
+  private static final String ERR_MESSAGE = "Failed to load properties";
+  private static String BASE_URL;
 
   static {
     Properties properties = new Properties();
     try (InputStream input = RestClient.class.getClassLoader()
         .getResourceAsStream(PROPERTY_FILE_NAME)) {
       if (input == null) {
-        logger.error("Sorry, unable to find file '{}'", PROPERTY_FILE_NAME);
-        throw new IllegalStateException("Failed to load properties");
+        logger.error("Unable to find file '{}'", PROPERTY_FILE_NAME);
+        throw new IllegalStateException(ERR_MESSAGE);
       }
       properties.load(input);
       BASE_URL = properties.getProperty("baseUrl");
     } catch (IOException ex) {
-      logger.error("IOException occurred while reading property.properties", ex);
-      throw new IllegalStateException("Failed to load properties", ex);
+      logger.error("IOException occurred while reading {}", PROPERTY_FILE_NAME, ex);
+      throw new IllegalStateException(ERR_MESSAGE, ex);
     }
   }
 
