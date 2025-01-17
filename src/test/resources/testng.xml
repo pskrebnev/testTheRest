@@ -1,0 +1,41 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="REST API testing" parallel="tests" thread-count="4">
+    <test name="Critical Path Tests">
+        <groups>
+            <run>
+                <include name="critical path"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="org.tests.gets.GetTests"/>
+            <class name="org.tests.posts.PostTests"/>
+        </classes>
+    </test>
+
+    <!--    TBD -->
+    <test name="Negative Tests">
+        <groups>
+            <run>
+                <include name="negative"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="org.tests.gets.GetTests"/>
+            <class name="org.tests.posts.PostTests"/>
+        </classes>
+    </test>
+
+
+    <!--    TBD -->
+    <test name="GET Tests">
+        <groups>
+            <run>
+                <include name="get"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="org.tests.gets.GetTests"/>
+            <class name="org.tests.posts.PostTests"/>
+        </classes>
+    </test>
+</suite>
