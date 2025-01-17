@@ -11,6 +11,22 @@
             <class name="org.tests.posts.PostTests"/>
         </classes>
     </test>
+
+    <!--    TBD -->
+    <test name="Negative Tests">
+        <groups>
+            <run>
+                <include name="negative"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="org.tests.gets.GetTests"/>
+            <class name="org.tests.posts.PostTests"/>
+        </classes>
+    </test>
+
+
+    <!--    TBD -->
     <test name="GET Tests">
         <groups>
             <run>

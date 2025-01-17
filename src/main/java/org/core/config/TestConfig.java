@@ -17,7 +17,7 @@ public class TestConfig {
   private static final String DEFAULT_BASE_URL = "https://jsonplaceholder.typicode.com";
   private static final int DEFAULT_THREAD_COUNT = 4;
 
-  private static volatile TestConfig instance;
+  private static TestConfig instance;
   private final ConfigProperties configProperties;
 
   private TestConfig() {
@@ -39,6 +39,14 @@ public class TestConfig {
       }
     }
     return instance;
+  }
+
+  public String getBaseUrl() {
+    return configProperties.getBaseUrl();
+  }
+
+  public int getThreadCount() {
+    return configProperties.getThreadCount();
   }
 
   private Properties loadProperties() {
@@ -81,10 +89,6 @@ public class TestConfig {
   private static class ConfigProperties {
     private final Properties properties;
     private final String baseUrl;
-    private final int timeout;
-    private final boolean enableLogging;
     private final int threadCount;
-    private final boolean retryEnabled;
-    private final int maxRetryCount;
   }
 }

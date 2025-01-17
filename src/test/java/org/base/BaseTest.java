@@ -10,8 +10,10 @@ public class BaseTest {
 
   protected TestConfig testConfig;
 
-  @BeforeClass
+  @BeforeClass(alwaysRun = true)
   public void setUp() {
     testConfig = TestConfig.getInstance();
+    logger.info("Test configuration initialized with base URL: {}", testConfig.getBaseUrl());
+    logger.info("Thread count: {}", testConfig.getThreadCount());
   }
 }
