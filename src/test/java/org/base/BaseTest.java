@@ -24,7 +24,7 @@ public class BaseTest {
         throw new IllegalStateException(ERR_MESSAGE);
       }
       properties.load(input);
-      BASE_URL = properties.getProperty("baseUrl");
+      BASE_URL = properties.getProperty("api.baseUrl");
     } catch (IOException ex) {
       logger.error("IOException occurred while reading {}", PROPERTY_FILE_NAME, ex);
       throw new IllegalStateException(ERR_MESSAGE, ex);
