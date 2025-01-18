@@ -17,7 +17,8 @@ public class TestConfig {
   private static final String DEFAULT_BASE_URL = "https://jsonplaceholder.typicode.com";
   private static final int DEFAULT_THREAD_COUNT = 4;
 
-  private static TestConfig instance;
+  // Singleton instance can be visible to all threads
+  private static volatile TestConfig instance;
   private final ConfigProperties configProperties;
 
   private TestConfig() {
@@ -41,10 +42,12 @@ public class TestConfig {
     return instance;
   }
 
+  // Getter for api.baseUrl properties
   public String getBaseUrl() {
     return configProperties.getBaseUrl();
   }
 
+  // Getter for test.thread.count properties
   public int getThreadCount() {
     return configProperties.getThreadCount();
   }
@@ -64,7 +67,6 @@ public class TestConfig {
     return props;
   }
 
-  // Helper methods for property parsing
   private String getProperty(Properties props, String key, String defaultValue) {
     String value = props.getProperty(key);
     if (value == null) {
