@@ -29,7 +29,7 @@ public class GetTests extends BaseTest {
   @Test(groups = {"get", "critical path"}
       , description = "Verify GET request returns 200")
   public void testGetPost() {
-    logger.info("Making GET request to: {}{}", testConfig.getBaseUrl(), POSTS_ENDPOINT);
+    logger.info("Executing GET request");
 
     given()
         .baseUri(testConfig.getBaseUrl())
@@ -42,7 +42,7 @@ public class GetTests extends BaseTest {
   @Test(groups = {"get"}, dataProvider = "postIds"
       , description = "Verify GET request has 'id', 'userId', 'title', 'body fields")
   public void testGetPostById(int postId) {
-    logger.info("Making GET request to: {}{}", testConfig.getBaseUrl(), POST_BY_ID_ENDPOINT);
+    logger.info("Executing GET with ID {}", postId);
 
     given()
         .baseUri(testConfig.getBaseUrl())
@@ -61,7 +61,7 @@ public class GetTests extends BaseTest {
       , description = "Verify invalid id returns 'not found' error")
   public void testGetPostByInvalidId() {
     int invalidId = 1999;
-    logger.info("Making GET request to: {}{}", testConfig.getBaseUrl(), POST_BY_ID_ENDPOINT);
+    logger.info("Executing GET with invalid ID: {}", invalidId);
 
     given()
         .baseUri(testConfig.getBaseUrl())
@@ -76,8 +76,7 @@ public class GetTests extends BaseTest {
       , description = "Verify every comment has the following fields:"
       + " 'postId', 'id', 'name', 'email', 'body' and at least 1 comment")
   public void testGetPostComments(int postId) {
-    logger.info("Making GET request to: {}{} with comments"
-        , testConfig.getBaseUrl(), POST_COMMENTS_ENDPOINT);
+    logger.info("Executing GET ID: {} with comments", postId);
 
     given()
         .baseUri(testConfig.getBaseUrl())
