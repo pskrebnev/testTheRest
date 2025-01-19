@@ -98,9 +98,9 @@ public class GetTests extends BaseTest {
       + "* 'email', 'name', 'body' fields;"
       + "* no null or empty values;"
       + "* all comments belongs to the specified post")
-  public void testCommentStructureAndContent() {
+  public void testCommentStructureAndContentWithRandomId() {
     int postId = (int) (Math.random() * 100) + 1;
-    logger.info("Testing random valid comment structure and content for post {}", postId);
+    logger.info("Testing random valid random comment structure and content for post {}", postId);
 
     Response response = given()
         .baseUri(testConfig.getBaseUrl())
@@ -121,12 +121,12 @@ public class GetTests extends BaseTest {
         , "Every comment should have email");
     Assert.assertTrue(names.stream()
             .noneMatch(String::isEmpty)
-        , "Every comment should have email");
+        , "Every comment should have name");
     Assert.assertTrue(bodies.stream()
             .noneMatch(String::isEmpty)
         , "Every comment should have body");
 
-    // Verify all comments belongs to the specified post
+    // Verify all comments belong to the specified post
     List<Integer> postIdList = response.jsonPath()
         .getList("postId");
     Assert.assertTrue(postIdList.stream()
