@@ -2,15 +2,18 @@ package org.tests.posts;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.base.BaseTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class PostTests extends BaseTest {
@@ -38,25 +41,33 @@ public class PostTests extends BaseTest {
         .body("body", equalTo(postData.get("body")));
   }
 
+  // TODO: Test failed
+  @Test(groups = {"post",
+      "negative"}, description = "Verify POST request fails with missing required fields")
+  public void testCreatePostWithMissingFields() {
+    Map<String, Object> invalidData = new HashMap<>();
+    invalidData.put("title", "Test invalid Title");
+    logger.info("Executing POST request with missing required fields");
+
+    Response response = given()
+        .baseUri(testConfig.getBaseUrl())
+        .contentType(ContentType.JSON)
+        .body(invalidData)
+        .when()
+        .post(POSTS_ENDPOINT)
+        .then()
+        .statusCode(not(HttpStatus.SC_OK))
+        .extract().response();
+
+    Assert.assertTrue(response.statusCode() >= 400,
+        "The error status code is expected for invalid request");
+  }
+
   private Map<String, Object> createValidPostData() {
     Map<String, Object> postData = new HashMap<>();
     postData.put("userId", 1);
     postData.put("title", "Test POST Title");
     postData.put("body", "Test body for testing of creation POST method");
     return postData;
-  }
-
-  private String generateLargeString(int length) {
-    StringBuilder sb = new StringBuilder(length);
-    String randomStr = "Paid was hill sir high. For him precaution any advantages"
-        + " dissimilar comparison few terminated projecting. Prevailed discovery"
-        + " immediate objection of ye at. Repair summer one winter living feebly"
-        + " pretty his. In so sense am known these since. Shortly respect ask cousins"
-        + " brought add tedious nay. Expect relied do we genius is. On as around spirit"
-        + " of hearts genius. Is raptures daughter branched laughter peculiar in settling.";
-    for (int i = 0; i < length; i++) {
-      sb.append(randomStr.charAt((int) (Math.random() * randomStr.length())));
-    }
-    return sb.toString();
   }
 }
