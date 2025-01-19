@@ -3,6 +3,8 @@ package org.tests.gets;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -15,13 +17,15 @@ import org.testng.annotations.Test;
 
 public class GetTests extends BaseTest {
   private static final Logger logger = LoggerFactory.getLogger(GetTests.class);
+
   private static final String POSTS_ENDPOINT = "/posts";
   private static final String POST_BY_ID_ENDPOINT = POSTS_ENDPOINT + "/{id}";
+  private static final String POST_COMMENTS_ENDPOINT = POSTS_ENDPOINT + "/{postId}/comments";
 
-  @Test(groups = {"get", "critical path"})
+  @Test(groups = {"get", "critical path"}
+      , description = "Verify GET request returns 200")
   public void testGetPost() {
-    logger.info("Testing GET /posts");
-    logger.info("Making request to: {}{}", testConfig.getBaseUrl(), POSTS_ENDPOINT);
+    logger.info("Making GET request to: {}{}", testConfig.getBaseUrl(), POSTS_ENDPOINT);
 
     given()
         .baseUri(testConfig.getBaseUrl())
@@ -31,10 +35,10 @@ public class GetTests extends BaseTest {
         .statusCode(HttpStatus.SC_OK);
   }
 
-  @Test(groups = {"get"}, dataProvider = "postIds")
+  @Test(groups = {"get"}, dataProvider = "postIds"
+      , description = "Verify GET request has 'id', 'userId', 'title', 'body fields")
   public void testGetPostById(int postId) {
-    logger.info("Testing GET /posts/{}", postId);
-    logger.info("Making request to: {}{}", testConfig.getBaseUrl(), POST_BY_ID_ENDPOINT);
+    logger.info("Making GET request to: {}{}", testConfig.getBaseUrl(), POST_BY_ID_ENDPOINT);
 
     given()
         .baseUri(testConfig.getBaseUrl())
@@ -49,11 +53,11 @@ public class GetTests extends BaseTest {
         .body("body", not(emptyString()));
   }
 
-  @Test(groups = {"get", "negative"})
+  @Test(groups = {"get", "negative"}
+      , description = "Verify invalid id returns 'not found' error")
   public void testGetPostByInvalidId() {
-    int invalidId = 999;
-    logger.info("Testing GET /posts/{} with invalid ID", invalidId);
-    logger.info("Making request to: {}{}", testConfig.getBaseUrl(), POST_BY_ID_ENDPOINT);
+    int invalidId = 1999;
+    logger.info("Making GET request to: {}{}", testConfig.getBaseUrl(), POST_BY_ID_ENDPOINT);
 
     given()
         .baseUri(testConfig.getBaseUrl())
@@ -62,6 +66,28 @@ public class GetTests extends BaseTest {
         .get(POST_BY_ID_ENDPOINT)
         .then()
         .statusCode(HttpStatus.SC_NOT_FOUND);
+  }
+
+  @Test(groups = {"get", "comments", "critical path"}, dataProvider = "postIds"
+      , description = "Verify every comment has the following fields:"
+      + " 'postId', 'id', 'name', 'email', 'body' and at least 1 comment")
+  public void testGetPostComments(int postId) {
+    logger.info("Making GET request to: {}{} with comments"
+        , testConfig.getBaseUrl(), POST_COMMENTS_ENDPOINT);
+
+    given()
+        .baseUri(testConfig.getBaseUrl())
+        .pathParam("postId", postId)
+        .when()
+        .get(POST_COMMENTS_ENDPOINT)
+        .then()
+        .statusCode(HttpStatus.SC_OK)
+        .body("size()", greaterThan(0))
+        .body("[0]", hasKey("id"))
+        .body("[0]", hasKey("name"))
+        .body("[0]", hasKey("email"))
+        .body("[0]", hasKey("body"))
+        .body("[0].postId", equalTo(postId));
   }
 
   // Data provider divided to the following: first, middle, last
