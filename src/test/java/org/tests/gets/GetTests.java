@@ -8,14 +8,18 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
+import io.restassured.response.Response;
+import java.util.List;
 import org.apache.http.HttpStatus;
 import org.base.BaseTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class GetTests extends BaseTest {
+
   private static final Logger logger = LoggerFactory.getLogger(GetTests.class);
 
   private static final String POSTS_ENDPOINT = "/posts";
@@ -90,11 +94,52 @@ public class GetTests extends BaseTest {
         .body("[0].postId", equalTo(postId));
   }
 
+  @Test(groups = {"get", "comments"}, description = "Verify random valid comment"
+      + " has at least the following:"
+      + "* 'email', 'name', 'body' fields;"
+      + "* no null or empty values;"
+      + "* all comments belongs to the specified post")
+  public void testCommentStructureAndContent() {
+    int postId = (int) (Math.random() * 100) + 1;
+    logger.info("Testing random valid comment structure and content for post {}", postId);
+
+    Response response = given()
+        .baseUri(testConfig.getBaseUrl())
+        .pathParam("postId", postId)
+        .when()
+        .get(POST_COMMENTS_ENDPOINT)
+        .then()
+        .statusCode(HttpStatus.SC_OK)
+        .extract().response();
+
+    List<String> emails = response.jsonPath().getList("email");
+    List<String> names = response.jsonPath().getList("name");
+    List<String> bodies = response.jsonPath().getList("body");
+
+    // Verify no empty values
+    Assert.assertTrue(emails.stream()
+            .noneMatch(String::isEmpty)
+        , "Every comment should have email");
+    Assert.assertTrue(names.stream()
+            .noneMatch(String::isEmpty)
+        , "Every comment should have email");
+    Assert.assertTrue(bodies.stream()
+            .noneMatch(String::isEmpty)
+        , "Every comment should have body");
+
+    // Verify all comments belongs to the specified post
+    List<Integer> postIdList = response.jsonPath()
+        .getList("postId");
+    Assert.assertTrue(postIdList.stream()
+            .allMatch(id -> id.equals(postId))
+        , "Every comment should belongs to the post");
+  }
+
   // Data provider divided to the following: first, middle, last
   // All IDs are valid
   @DataProvider(name = "postIds")
   public Object[][] postIds() {
-    return new Object[][] {
+    return new Object[][]{
         {1},
         {50},
         {100}
