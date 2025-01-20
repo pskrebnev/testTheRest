@@ -58,7 +58,6 @@ public class PutTests extends BaseTest {
         .statusCode(not(HttpStatus.SC_OK));
   }
 
-
   private Map<String, Object> createValidUpdateData() {
     Map<String, Object> updateData = new HashMap<>();
     updateData.put("userId", 1);
