@@ -5,12 +5,14 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.base.BaseTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class PutTests extends BaseTest {
@@ -56,6 +58,39 @@ public class PutTests extends BaseTest {
         .put(PUTS_BY_ID_ENDPOINT)
         .then()
         .statusCode(not(HttpStatus.SC_OK));
+  }
+
+  @Test(groups = {"put", "negative"}, description = "Verify PUT request with invalid"
+      + " JSON returns parsing error")
+  public void testUpdatePostWithInvalidJson() {
+    int postId = (int) (Math.random() * 100) + 1;
+    logger.info("Executing PUT request with invalid JSON for ID: {}", postId);
+
+    String invalidData = "This is not JSON";
+    Response response = given()
+        .baseUri(testConfig.getBaseUrl())
+        .header("Content-Type", "application/json")
+        .pathParam("id", postId)
+        .body(invalidData)
+//        .log().all()
+        .when()
+        .put(PUTS_BY_ID_ENDPOINT)
+        .then()
+//        .log().all()
+        .extract()
+        .response();
+
+    String responseBody = response.getBody().asString();
+//    logger.info("Response status code: {}", response.getStatusCode());
+//    logger.info("Response body: {}", responseBody);
+
+    // Verify response
+    Assert.assertTrue(responseBody.contains("SyntaxError")
+        , "Response body should contain JSON syntax error");
+    Assert.assertTrue(responseBody.contains("Unexpected token")
+        , "Response body should contain unexpected token error");
+    Assert.assertTrue(responseBody.contains("JSON.parse")
+        , "Response body should indicate JSON parsing failure");
   }
 
   private Map<String, Object> createValidUpdateData() {
