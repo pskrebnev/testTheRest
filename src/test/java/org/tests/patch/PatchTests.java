@@ -6,12 +6,14 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpStatus;
 import org.base.BaseTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class PatchTests extends BaseTest {
@@ -88,5 +90,32 @@ public class PatchTests extends BaseTest {
         .statusCode(HttpStatus.SC_OK) // In this case the server returns 200 OK
         .body("id", nullValue()) // but this id is not found in the response
         .body("title", equalTo(patchData.get("title")));
+  }
+
+  @Test(groups = {"patch", "negative"}, description = "Verify PATCH request with invalid"
+      + " JSON returns parsing error")
+  public void testUpdatePostWithInvalidJson() {
+    int postId = (int) (Math.random() * 100) + 1;
+    String invalidData = "This is not JSON";
+    logger.info("Executing PATCH request with invalid JSON for ID: {}", postId);
+
+    Response response = given()
+        .baseUri(testConfig.getBaseUrl())
+        .header("Content-Type", "application/json")
+        .pathParam("id", postId)
+        .body(invalidData)
+        .when()
+        .patch(PATCH_BY_ID_ENDPOINT);
+
+    String responseBody = response.getBody().asString();
+    logger.info("Response body: {}", responseBody);
+    logger.info("Response status code: {}", response.getStatusCode());
+
+    Assert.assertTrue(responseBody.contains("SyntaxError"),
+        "Response should contain JSON 'SyntaxError'");
+    Assert.assertTrue(responseBody.contains("Unexpected token"),
+        "Response should contain 'Unexpected token' error");
+    Assert.assertEquals(response.getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
+        "Response status code should be 500");
   }
 }
