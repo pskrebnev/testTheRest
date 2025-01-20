@@ -1,4 +1,4 @@
-package org.tests.puts;
+package org.tests.put;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;

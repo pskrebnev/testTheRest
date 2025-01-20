@@ -7,9 +7,10 @@
             </run>
         </groups>
         <classes>
-            <class name="org.tests.gets.GetTests"/>
-            <class name="org.tests.posts.PostTests"/>
-            <class name="org.tests.puts.PutTests"></class>
+            <class name="org.tests.get.GetTests"/>
+            <class name="org.tests.post.PostTests"/>
+            <class name="org.tests.put.PutTests"/>
+            <class name="org.tests.patch.PatchTests"/>
         </classes>
     </test>
 
@@ -21,9 +22,10 @@
             </run>
         </groups>
         <classes>
-            <class name="org.tests.gets.GetTests"/>
-            <class name="org.tests.posts.PostTests"/>
-            <class name="org.tests.puts.PutTests"></class>
+            <class name="org.tests.get.GetTests"/>
+            <class name="org.tests.post.PostTests"/>
+            <class name="org.tests.put.PutTests"/>
+            <class name="org.tests.patch.PatchTests"/>
         </classes>
     </test>
 
@@ -36,7 +38,7 @@
             </run>
         </groups>
         <classes>
-            <class name="org.tests.gets.GetTests"/>
+            <class name="org.tests.get.GetTests"/>
         </classes>
     </test>
     <test name="POST Tests">
@@ -46,7 +48,7 @@
             </run>
         </groups>
         <classes>
-            <class name="org.tests.posts.PostTests"/>
+            <class name="org.tests.post.PostTests"/>
         </classes>
     </test>
     <test name="PUT Tests">
@@ -56,7 +58,17 @@
             </run>
         </groups>
         <classes>
-            <class name="org.tests.puts.PutTests"/>
+            <class name="org.tests.put.PutTests"/>
+        </classes>
+    </test>
+    <test name="PATCH Tests">
+        <groups>
+            <run>
+                <include name="patch"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="org.tests.patch.PatchTests"/>
         </classes>
     </test>
 </suite>
