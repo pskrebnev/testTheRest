@@ -72,19 +72,17 @@ public class PutTests extends BaseTest {
         .header("Content-Type", "application/json")
         .pathParam("id", postId)
         .body(invalidData)
-//        .log().all()
         .when()
         .put(PUTS_BY_ID_ENDPOINT)
         .then()
-//        .log().all()
         .extract()
         .response();
 
     String responseBody = response.getBody().asString();
-//    logger.info("Response status code: {}", response.getStatusCode());
-//    logger.info("Response body: {}", responseBody);
 
     // Verify response
+    Assert.assertEquals(response.getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR
+        , "Response status code should be 500");
     Assert.assertTrue(responseBody.contains("SyntaxError")
         , "Response body should contain JSON syntax error");
     Assert.assertTrue(responseBody.contains("Unexpected token")
