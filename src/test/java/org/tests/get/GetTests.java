@@ -1,4 +1,4 @@
-package org.tests.gets;
+package org.tests.get;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.emptyString;
@@ -138,7 +138,7 @@ public class GetTests extends BaseTest {
   // All IDs are valid
   @DataProvider(name = "postIds")
   public Object[][] postIds() {
-    return new Object[][]{
+    return new Object[][] {
         {1},
         {50},
         {100}
