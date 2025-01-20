@@ -1,6 +1,7 @@
 package org.tests.put;
 
 import static io.restassured.RestAssured.given;
+import static org.core.util.Utils.getRandomId;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
@@ -23,7 +24,7 @@ public class PutTests extends BaseTest {
   @Test(groups = {"put", "critical path"}, description = "Verify PUT request updates"
       + " a post with valid data")
   public void testUpdatePost() {
-    int postId = 1;
+    int postId = getRandomId();
     Map<String, Object> updatedData = createValidUpdateData();
     logger.info("Executing PUT request to update post with ID: {}", postId);
 
@@ -63,7 +64,7 @@ public class PutTests extends BaseTest {
   @Test(groups = {"put", "negative"}, description = "Verify PUT request with invalid"
       + " JSON returns parsing error")
   public void testUpdatePostWithInvalidJson() {
-    int postId = (int) (Math.random() * 100) + 1;
+    int postId = getRandomId();
     logger.info("Executing PUT request with invalid JSON for ID: {}", postId);
 
     String invalidData = "This is not JSON";

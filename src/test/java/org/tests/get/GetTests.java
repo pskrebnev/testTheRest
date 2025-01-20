@@ -1,6 +1,7 @@
 package org.tests.get;
 
 import static io.restassured.RestAssured.given;
+import static org.core.util.Utils.getRandomId;
 import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -99,7 +100,7 @@ public class GetTests extends BaseTest {
       + "* no null or empty values;"
       + "* all comments belongs to the specified post")
   public void testCommentStructureAndContentWithRandomId() {
-    int postId = (int) (Math.random() * 100) + 1;
+    int postId = getRandomId();
     logger.info("Testing random valid random comment structure and content for post {}", postId);
 
     Response response = given()

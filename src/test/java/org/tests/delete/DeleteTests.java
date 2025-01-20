@@ -1,6 +1,7 @@
 package org.tests.delete;
 
 import static io.restassured.RestAssured.given;
+import static org.core.util.Utils.getRandomId;
 import static org.hamcrest.Matchers.equalTo;
 
 import org.apache.http.HttpStatus;
@@ -17,7 +18,7 @@ public class DeleteTests extends BaseTest {
   @Test(groups = {"delete",
       "critical path"}, description = "Verify DELETE request removes an existing pots")
   public void testDeletePost() {
-    int postId = (int) (Math.random() * 100) + 1;
+    int postId = getRandomId();
     logger.info("Verify DELETE request removes a random existing post: {}", postId);
 
     given()

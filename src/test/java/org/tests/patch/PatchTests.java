@@ -1,6 +1,7 @@
 package org.tests.patch;
 
 import static io.restassured.RestAssured.given;
+import static org.core.util.Utils.getRandomId;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -24,7 +25,7 @@ public class PatchTests extends BaseTest {
   @Test(groups = {"patch", "critical path"}, description = "Verify PATCH request updates"
       + " specific field of an existed post")
   public void testPartialUpdatePost() {
-    int postId = (int) (Math.random() * 100) + 1;
+    int postId = getRandomId();
     logger.info("Executing PATCH request to update post with ID: {}", postId);
     Map<String, Object> patchData = new HashMap<>();
     patchData.put("title", "Updated title via PATCH");
@@ -47,7 +48,7 @@ public class PatchTests extends BaseTest {
   @Test(groups = {"patch", "critical path"}, description = "Verify PATCH request updates with"
       + " multiple fields of an existed post")
   public void testMultipleFieldsUpdatePost() {
-    int postId = (int) (Math.random() * 100) + 1;
+    int postId = getRandomId();
 
     Map<String, Object> patchData = new HashMap<>();
     patchData.put("title", "Updated title via PATCH");
@@ -95,7 +96,7 @@ public class PatchTests extends BaseTest {
   @Test(groups = {"patch", "negative"}, description = "Verify PATCH request with invalid"
       + " JSON returns parsing error")
   public void testUpdatePostWithInvalidJson() {
-    int postId = (int) (Math.random() * 100) + 1;
+    int postId = getRandomId();
     String invalidData = "This is not JSON";
     logger.info("Executing PATCH request with invalid JSON for ID: {}", postId);
 
