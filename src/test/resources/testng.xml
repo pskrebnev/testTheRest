@@ -11,10 +11,10 @@
             <class name="org.tests.post.PostTests"/>
             <class name="org.tests.put.PutTests"/>
             <class name="org.tests.patch.PatchTests"/>
+            <class name="org.tests.delete.DeleteTests"/>
         </classes>
     </test>
 
-    <!--    TBD -->
     <test name="Negative Tests">
         <groups>
             <run>
@@ -26,11 +26,10 @@
             <class name="org.tests.post.PostTests"/>
             <class name="org.tests.put.PutTests"/>
             <class name="org.tests.patch.PatchTests"/>
+            <class name="org.tests.delete.DeleteTests"/>
         </classes>
     </test>
 
-
-    <!--    TBD -->
     <test name="GET Tests">
         <groups>
             <run>
@@ -69,6 +68,16 @@
         </groups>
         <classes>
             <class name="org.tests.patch.PatchTests"/>
+        </classes>
+    </test>
+    <test name="DELETE Tests">
+        <groups>
+            <run>
+                <include name="delete"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="org.tests.delete.DeleteTests"/>
         </classes>
     </test>
 </suite>
