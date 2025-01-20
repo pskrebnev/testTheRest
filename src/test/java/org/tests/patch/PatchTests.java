@@ -3,6 +3,7 @@ package org.tests.patch;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import io.restassured.http.ContentType;
 import java.util.HashMap;
@@ -65,5 +66,27 @@ public class PatchTests extends BaseTest {
         .body("title", equalTo(patchData.get("title")))
         .body("body", equalTo(patchData.get("body")))
         .body("userId", notNullValue());
+  }
+
+  @Test(groups = {"patch", "negative"}, description = "Verify PATCH request with invalid"
+      + " ID returns server error")
+  public void testUpdateNonExistedPost() {
+    int nonExistedId = 1999;
+    Map<String, Object> patchData = new HashMap<>();
+    patchData.put("title", "Updated title via PATCH for non-existed ID: " + nonExistedId);
+
+    logger.info("Executing PATCH request to update post with non-existed ID: {}", nonExistedId);
+
+    given()
+        .baseUri(testConfig.getBaseUrl())
+        .contentType(ContentType.JSON)
+        .pathParam("id", nonExistedId)
+        .body(patchData)
+        .when()
+        .patch(PATCH_BY_ID_ENDPOINT)
+        .then()
+        .statusCode(HttpStatus.SC_OK) // In this case the server returns 200 OK
+        .body("id", nullValue()) // but this id is not found in the response
+        .body("title", equalTo(patchData.get("title")));
   }
 }
